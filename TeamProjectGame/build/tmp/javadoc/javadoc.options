@@ -1,0 +1,7 @@
+-classpath '/home/jbailey/Dropbox/school/computer_science/CS1410/TeamProjectGame/build/classes/main:/home/jbailey/Dropbox/school/computer_science/CS1410/TeamProjectGame/build/resources/main:/home/jbailey/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.13/7fcf30c25b8f4a9379b9dad0d3f487b25272c026/slf4j-api-1.7.13.jar'
+-d '/home/jbailey/Dropbox/school/computer_science/CS1410/TeamProjectGame/build/docs/javadoc'
+-doctitle 'TeamProjectGame API'
+-quiet 
+-windowtitle 'TeamProjectGame API'
+'/home/jbailey/Dropbox/school/computer_science/CS1410/TeamProjectGame/src/main/java/game/GameGui.java'
+'/home/jbailey/Dropbox/school/computer_science/CS1410/TeamProjectGame/src/main/java/Library.java'
