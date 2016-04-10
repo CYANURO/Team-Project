@@ -12,6 +12,8 @@ import java.awt.image.DataBufferInt;
 
 import javax.swing.Timer;
 
+import game.input.Keyboard;
+
 public class GameCanvas extends Canvas implements Commons, ActionListener {
 	/**
 	 * 
@@ -19,8 +21,11 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private int delay = 10;
+	private int counter;
+	private int delay = 1;
 	protected Timer timer = new Timer(delay, this);
+	
+	private Keyboard key;
 	
 	private BufferedImage image = new BufferedImage(GAME_WIDTH,GAME_HEIGHT, BufferedImage.TYPE_INT_RGB);
 	private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
@@ -31,6 +36,9 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	public GameCanvas(){
 		setPreferredSize(new Dimension(GAME_WIDTH,GAME_HEIGHT));
 		
+		key = new Keyboard();
+		addKeyListener(key);
+		
 		timer.start();
 		
 	}
@@ -39,6 +47,10 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	 * Will take user input as well as any computation needed for the game. 
 	 */
 	public void update(){
+		key.update();
+		if(key.jump) x++;
+		if(key.attack) x--;
+		
 		
 	}
 	
@@ -56,19 +68,24 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 		g.setColor(Color.BLUE);
 		g.fillRect(0, 0, getWidth(),getHeight());
 		g.setColor(Color.BLACK);
-		g.drawLine(x, 30, 330, 280);
+		g.fillOval(x, 40, 20, 20);
 		g.dispose();
 		bs.show();
 		
-		x++;
+		
 		
 	}
 	
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		counter++; 
 		
-		update();
+		while (counter > 17){
+			update();
+			counter = 0;
+		}
+		
 		render();
 		
 		// TODO Auto-generated method stub
