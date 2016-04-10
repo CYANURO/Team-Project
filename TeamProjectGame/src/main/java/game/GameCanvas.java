@@ -7,8 +7,6 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 
 import javax.swing.Timer;
 
@@ -27,14 +25,18 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	
 	private Keyboard key;
 	
-	private BufferedImage image = new BufferedImage(GAME_WIDTH,GAME_HEIGHT, BufferedImage.TYPE_INT_RGB);
-	private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+	private Character character;
+	private Terrain terrain;
 	
-	//For Testing purposes  
-	int x = 40;
+	//private BufferedImage image = new BufferedImage(GAME_WIDTH,GAME_HEIGHT, BufferedImage.TYPE_INT_RGB);
+	//private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+	
 	
 	public GameCanvas(){
 		setPreferredSize(new Dimension(GAME_WIDTH,GAME_HEIGHT));
+		
+		character = new Character(60, 100);
+		terrain = new Terrain(0, 130);
 		
 		key = new Keyboard();
 		addKeyListener(key);
@@ -47,10 +49,18 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	 * Will take user input as well as any computation needed for the game. 
 	 */
 	public void update(){
-		key.update();
-		if(key.jump) x++;
-		if(key.attack) x--;
 		
+		key.update();
+		
+		if(key.jump) character.jump();
+		if(key.attack) character.attack();
+		
+		terrain.update();
+		
+		if((character.getY()+character.getHeight()) > terrain.getY()){
+			System.out.println("stuff");
+		//	timer.stop();
+		}
 		
 	}
 	
@@ -63,12 +73,14 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 			createBufferStrategy(3);
 			return;
 		}
-		
 		Graphics g = bs.getDrawGraphics();
+		//Paint Background.
 		g.setColor(Color.BLUE);
 		g.fillRect(0, 0, getWidth(),getHeight());
-		g.setColor(Color.BLACK);
-		g.fillOval(x, 40, 20, 20);
+		
+		terrain.paintTerrain(g);
+		character.paintCharacter(g);
+		
 		g.dispose();
 		bs.show();
 		
@@ -85,11 +97,6 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 			update();
 			counter = 0;
 		}
-		
 		render();
-		
-		// TODO Auto-generated method stub
-		
 	}
-
 }
