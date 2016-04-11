@@ -5,13 +5,15 @@ import java.awt.event.KeyListener;
 
 public class Keyboard implements KeyListener{
 	private boolean[] keys = new boolean[256];
-	public boolean jump, attack;
+	public boolean jump, attack, pause;
 	
 	public void update(){
 		jump = keys[KeyEvent.VK_Z];
 		attack = keys[KeyEvent.VK_X];
+		pause = keys[KeyEvent.VK_SPACE];
 		
-		System.out.println("jump: " + jump + "\nattack: " + attack + "\n");
+		//For testing
+		//System.out.println("jump: " + jump + "\nattack: " + attack + "\n" + "pause: " + pause);
 	}
 
 	@Override

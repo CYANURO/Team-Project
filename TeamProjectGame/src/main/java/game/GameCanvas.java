@@ -24,6 +24,7 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	protected Timer timer = new Timer(delay, this);
 	
 	private Keyboard key;
+	private boolean pause;
 	
 	private Character character;
 	private Terrain terrain;
@@ -36,13 +37,18 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 		setPreferredSize(new Dimension(GAME_WIDTH,GAME_HEIGHT));
 		
 		character = new Character(60, 100);
-		terrain = new Terrain(0, 130);
+		terrain = new Terrain(0, 120);
 		
 		key = new Keyboard();
 		addKeyListener(key);
 		
-		timer.start();
 		
+		
+		//timer.start();
+		
+	}
+	public void start(){
+		timer.start();
 	}
 	
 	/**
@@ -55,12 +61,11 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 		if(key.jump) character.jump();
 		if(key.attack) character.attack();
 		
-		terrain.update();
-		
-		if((character.getY()+character.getHeight()) > terrain.getY()){
-			System.out.println("stuff");
-		//	timer.stop();
+		if(character.getY()+character.getHeight() <= terrain.getY()){
+			character.setY(character.getY() + 1);
 		}
+		
+		terrain.update();
 		
 	}
 	
@@ -91,12 +96,17 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+			
+		
 		counter++; 
 		
 		while (counter > 17){
+			//For Testing
+			//System.out.println(hasFocus());
 			update();
 			counter = 0;
 		}
 		render();
+		
 	}
 }

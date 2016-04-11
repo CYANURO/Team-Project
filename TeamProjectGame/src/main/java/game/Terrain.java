@@ -58,7 +58,7 @@ public class Terrain implements Position {
 	}
 	
 	public void paintTerrain(Graphics g){
-        g.setColor(Color.RED);
+        g.setColor(Color.BLACK);
         g.fillRect(xPos,yPos,width,height);
         g.setColor(Color.BLACK);
         g.drawRect(xPos,yPos,width,height);  

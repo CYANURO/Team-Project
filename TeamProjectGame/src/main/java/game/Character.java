@@ -49,7 +49,7 @@ public class Character implements Position {
 	}
 	
 	public void jump(){
-		yPos--;
+		yPos-=3;
 	}
 	public void attack(){
 		characterColor = Color.RED;
