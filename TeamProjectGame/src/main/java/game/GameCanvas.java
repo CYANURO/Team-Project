@@ -61,11 +61,18 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 		if(key.jump) character.jump();
 		if(key.attack) character.attack();
 		
-		if(character.getY()+character.getHeight() <= terrain.getY()){
-			character.setY(character.getY() + 1);
-		}
 		
-		terrain.update();
+		if (character.getY() + character.getHeight() < GAME_HEIGHT) {
+			terrain.update();
+
+			if (character.getY() + character.getHeight() <= terrain.getY()
+					|| character.getX() > terrain.getX() + terrain.getWidth()) {
+				character.setY(character.getY() + 2);
+			}
+
+		} else {
+			
+		}
 		
 	}
 	
