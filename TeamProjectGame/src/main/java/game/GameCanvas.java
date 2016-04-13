@@ -28,6 +28,7 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	
 	private Character character;
 	private Terrain terrain;
+	private Obstacle obstacle;
 	
 	//private BufferedImage image = new BufferedImage(GAME_WIDTH,GAME_HEIGHT, BufferedImage.TYPE_INT_RGB);
 	//private int[] pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
@@ -36,8 +37,9 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	public GameCanvas(){
 		setPreferredSize(new Dimension(GAME_WIDTH,GAME_HEIGHT));
 		
-		character = new Character(60, 100);
+		character = new Character(20, 100);
 		terrain = new Terrain(0, 120);
+		obstacle = new Obstacle(80, 80);
 		
 		key = new Keyboard();
 		addKeyListener(key);
@@ -58,20 +60,23 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 		
 		key.update();
 		
-		if(key.jump) character.jump();
-		if(key.attack) character.attack();
 		
 		
 		if (character.getY() + character.getHeight() < GAME_HEIGHT) {
+			
+			character.update(key.jump, key.attack);
 			terrain.update();
-
+			obstacle.update();
+			
+			
 			if (character.getY() + character.getHeight() <= terrain.getY()
 					|| character.getX() > terrain.getX() + terrain.getWidth()) {
 				character.setY(character.getY() + 2);
 			}
 
-		} else {
-			
+		}
+		if(character.getX() + character.getWidth() == obstacle.getX() && key.attack){
+			obstacle.destroy();
 		}
 		
 	}
@@ -91,6 +96,7 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 		g.fillRect(0, 0, getWidth(),getHeight());
 		
 		terrain.paintTerrain(g);
+		obstacle.paintObstacle(g);
 		character.paintCharacter(g);
 		
 		g.dispose();
@@ -109,9 +115,10 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 		
 		while (counter > 17){
 			//For Testing
-			//System.out.println(hasFocus());
+			//System.out.println(getHeight());
 			update();
 			counter = 0;
+			
 		}
 		render();
 		

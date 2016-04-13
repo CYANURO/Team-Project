@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.CardLayout;
+import java.awt.Dimension;
 /**
  * 
  * 
@@ -44,8 +45,11 @@ public class GameGui extends JFrame implements Commons{
 	public GameGui() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, GAME_WIDTH, GAME_HEIGHT);
+		setLocation(100,100);
+		//setBounds(100, 100, GAME_WIDTH, GAME_HEIGHT);
+		
 		contentPane = new JPanel();
+		contentPane.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new CardLayout(0, 0));
@@ -58,6 +62,8 @@ public class GameGui extends JFrame implements Commons{
 		
 		welcomePanel = new WelcomePanel();
 		contentPane.add(welcomePanel, "name_6799939532017");
+		
+		pack();
 	}
 
 }

@@ -3,17 +3,18 @@ package game;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Terrain implements Position {
-	
+public class Obstacle implements Position {
 	private int xPos = 10;
 	private int yPos = 100;
 	
-	private int width = 800;
-	private int height = 200;
+	private int width = 40;
+	private int height = 40;
 	
 	private int speed = 1;
 	
-	public Terrain(int xPos, int yPos){
+	private boolean destroyed;
+	
+	public Obstacle(int xPos, int yPos){
 		this.xPos = xPos;
 		this.yPos = yPos; 
 	}
@@ -48,7 +49,6 @@ public class Terrain implements Position {
 	public int getHeight() {
 		return height;
 	}
-	
 	public void incrementSpeed(){
 		speed++;
 	}
@@ -57,11 +57,17 @@ public class Terrain implements Position {
 		xPos -= speed;
 	}
 	
-	public void paintTerrain(Graphics g){
-        g.setColor(Color.BLACK);
+	public void destroy(){
+		destroyed = true;
+	}
+	
+	public void paintObstacle(Graphics g){
+		if(!destroyed){
+        g.setColor(Color.ORANGE);
         g.fillRect(xPos,yPos,width,height);
         g.setColor(Color.BLACK);
-        g.drawRect(xPos,yPos,width,height);  
+        g.drawRect(xPos,yPos,width,height); 
+		}
 	}
 
 }

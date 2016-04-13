@@ -13,6 +13,7 @@ public class Character implements Position {
 	private int height = 20;
 	
 	public Character(int xPos, int yPos){
+		characterColor = Color.CYAN;
 		this.xPos = xPos;
 		this.yPos = yPos; 
 	}
@@ -53,11 +54,22 @@ public class Character implements Position {
 	}
 	public void attack(){
 		characterColor = Color.RED;
-		xPos++; 
+		//xPos++; 
+	}
+	public void update(boolean jump, boolean attack){
+		if(attack){
+			characterColor = Color.RED;
+		}else{
+			characterColor = Color.CYAN;
+		}
+		if(jump){
+			yPos-=4;
+		}
+		
 	}
 	
 	public void paintCharacter(Graphics g){
-        g.setColor(Color.CYAN);
+        g.setColor(characterColor);
         g.fillOval(xPos,yPos,width,height);
         g.setColor(Color.BLACK);
         g.drawOval(xPos,yPos,width,height);
