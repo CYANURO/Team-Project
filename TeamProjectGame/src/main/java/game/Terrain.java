@@ -3,7 +3,7 @@ package game;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class Terrain implements Position {
+public class Terrain implements Commons, Position {
 	
 	private int xPos = 10;
 	private int yPos = 100;
@@ -54,6 +54,10 @@ public class Terrain implements Position {
 	}
 	
 	public void update(){
+		if(xPos + width == 0){
+		   xPos = GAME_WIDTH;
+		}
+
 		xPos -= speed;
 	}
 	

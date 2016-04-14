@@ -60,6 +60,10 @@ public class Obstacle implements Position {
 	public void destroy(){
 		destroyed = true;
 	}
+
+	public boolean isDestroyed(){
+		return destroyed;
+	}
 	
 	public void paintObstacle(Graphics g){
 		if(!destroyed){
