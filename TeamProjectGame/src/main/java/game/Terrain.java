@@ -11,7 +11,7 @@ public class Terrain implements Commons, Position {
 	private int width = 800;
 	private int height = 200;
 	
-	private int speed = 1;
+	private int speed = 3;
 	
 	public Terrain(int xPos, int yPos){
 		this.xPos = xPos;
@@ -54,7 +54,7 @@ public class Terrain implements Commons, Position {
 	}
 	
 	public void update(){
-		if(xPos + width == 0){
+		if(xPos + width <= 0){
 		   xPos = GAME_WIDTH;
 		}
 

@@ -9,8 +9,11 @@ public class Character implements Position {
 	private int xPos = 0;
 	private int yPos = 60;
 	
-	private int width = 20;
+	private int width = 40;
 	private int height = 20;
+	
+	private int[] jumpPos = {8, 7, 6, 5, 4, 3, 2, 1, 0}; 
+	int jumpPosIndex = 0;
 	
 	public Character(int xPos, int yPos){
 		characterColor = Color.CYAN;
@@ -50,21 +53,28 @@ public class Character implements Position {
 	}
 	
 	public void jump(){
-		yPos-=4;
+		yPos-=2;
 	}
-	public void attack(){
-		characterColor = Color.RED;
-		//xPos++; 
-	}
-	public void update(boolean jump, boolean attack){
+	public void attack(boolean attack){
 		if(attack){
 			characterColor = Color.RED;
 		}else{
 			characterColor = Color.CYAN;
 		}
-		if(jump){
-			yPos-=4;
+		//characterColor = Color.RED;
+		//xPos++; 
+	}
+	public void update(boolean jump, boolean attack){
+		
+		if(attack){
+			characterColor = Color.RED;
+		}else{
+			characterColor = Color.CYAN;
 		}
+		//if(jump){
+			//int jumpPosIndex;
+			//yPos-=4;
+		//}
 		
 	}
 	

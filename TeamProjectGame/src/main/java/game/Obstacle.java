@@ -10,7 +10,7 @@ public class Obstacle implements Position {
 	private int width = 40;
 	private int height = 40;
 	
-	private int speed = 1;
+	private int speed = 3;
 	
 	private boolean destroyed;
 	
