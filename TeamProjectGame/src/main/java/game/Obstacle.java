@@ -73,5 +73,4 @@ public class Obstacle implements Position {
         g.drawRect(xPos,yPos,width,height); 
 		}
 	}
-
 }

@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferStrategy;
 
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 import game.input.Keyboard;
@@ -30,20 +31,16 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	
 	private boolean previousJump;
 	private int jumpLength;
-	int jumpCount;
-	
+	private int jumpCount;
 	private int attackCount;
+	private int livesCount;
 
 	public GameCanvas() {
 		setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 
-		character = new Character(20, 280);
-		terrain = new Terrain(0, 300);
-		obstacle = new Obstacle(320, 260);
-
-		key = new Keyboard();
-		addKeyListener(key);
-
+		livesCount = 3;
+		createCanvas();
+		
 	}
 
 	/**
@@ -53,8 +50,22 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 		timer.start();
 	}
 	
+	public void createCanvas() {
+		
+		character = new Character(20, 280);
+		terrain = new Terrain(0, 300);
+		obstacle = new Obstacle(320, 260);
+		
+		key = new Keyboard();
+		addKeyListener(key);
+
+
+	}
+	
 	private boolean characterJump() {
+		
 		boolean characterJumping = false;
+		
 		
 		if(key.jump && jumpCount < 2){
 			jumpLength++;
@@ -82,7 +93,7 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	 * Will take user input as well as any computation needed for the game.
 	 */
 	public void update() {
-
+		
 		key.update();
 
 		if (!gameOver) {
@@ -113,8 +124,9 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 							// Add points here;
 							obstacle.destroy();
 						} else if(!obstacle.isDestroyed() && character.getX()<= obstacle.getX()) {
-							System.out.println("Game Over");
-							gameOver=true;
+							
+							livesCount--;
+							checkLiveCount();
 						}
 					}	
 				} 
@@ -125,14 +137,17 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 					terrain.setY(terrain.getY() - 2);
 				}
 				// ends game if character fall to the bottom of the screen. 
-				if (characterYPos > GAME_HEIGHT) {
-					System.out.println("Game Over");
-					gameOver = true;
+				if (characterYPos > terrain.getY() && characterXPos > terrain.getX()) {
+					
+					livesCount--;
+					checkLiveCount();
 				}
 				// ends game if character runs into the terrain. 
-				if (characterXPos > terrain.getX() && characterYPos > terrain.getY() && character.getY() < bottomOfTerain) {
-					System.out.println("Game Over");
-					gameOver = true;
+				else if (characterXPos > terrain.getX() && characterYPos > terrain.getY() && 
+						character.getY() < bottomOfTerain) {
+					
+					livesCount--;
+					checkLiveCount();
 				}
 
 			}
@@ -149,10 +164,6 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 		}
 
 	}
-
-
-
-
 
 	/**
 	 * Repaints the Canvas
@@ -174,6 +185,24 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 
 		g.dispose();
 		bs.show();
+	}
+	
+	public void checkLiveCount() {
+		
+		if(livesCount > 0) {
+			
+			//JOptionPane.showMessageDialog(getParent(), "You died! " + livesCount + " lives left!");
+			System.out.println("You died! " + livesCount + " lives left!");
+			revalidate();
+			createCanvas();
+		}
+		
+		else{
+			
+			gameOver = true;
+			JOptionPane.showMessageDialog(getParent(), "Game Over! " + livesCount + " lives left!");
+			
+		}
 	}
 
 	@Override

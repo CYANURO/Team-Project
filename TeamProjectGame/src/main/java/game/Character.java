@@ -12,6 +12,8 @@ public class Character implements Position {
 	private int width = 40;
 	private int height = 20;
 	
+	private boolean destroyed;
+	
 	private int[] jumpPos = {8, 7, 6, 5, 4, 3, 2, 1, 0}; 
 	int jumpPosIndex = 0;
 	
@@ -52,6 +54,11 @@ public class Character implements Position {
 		return height;
 	}
 	
+	public void destroy() {
+		
+		destroyed  = true;
+	}
+	
 	public void jump(){
 		yPos-=2;
 	}
@@ -79,10 +86,15 @@ public class Character implements Position {
 	}
 	
 	public void paintCharacter(Graphics g){
-        g.setColor(characterColor);
-        g.fillOval(xPos,yPos,width,height);
-        g.setColor(Color.BLACK);
-        g.drawOval(xPos,yPos,width,height);
+		
+		if(!destroyed) {
+			
+			g.setColor(characterColor);
+	        g.fillOval(xPos,yPos,width,height);
+	        g.setColor(Color.BLACK);
+	        g.drawOval(xPos,yPos,width,height);
+			
+		}
     }
 
 }

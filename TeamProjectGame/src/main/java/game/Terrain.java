@@ -53,6 +53,7 @@ public class Terrain implements Commons, Position {
 		speed++;
 	}
 	
+	
 	public void update(){
 		if(xPos + width <= 0){
 		   xPos = GAME_WIDTH;
@@ -62,10 +63,11 @@ public class Terrain implements Commons, Position {
 	}
 	
 	public void paintTerrain(Graphics g){
-        g.setColor(Color.BLACK);
-        g.fillRect(xPos,yPos,width,height);
-        g.setColor(Color.BLACK);
-        g.drawRect(xPos,yPos,width,height);  
+		
+		g.setColor(Color.BLACK);
+	    g.fillRect(xPos,yPos,width,height);
+	    g.setColor(Color.BLACK);
+	    g.drawRect(xPos,yPos,width,height);  
+	    
 	}
-
 }
