@@ -1,3 +1,17 @@
-.dropbox
-.project
+# Gradle 
+# ------
+/TeamProjectGame/.gradle
+/TeamProjectGame/build
+
+# Eclipse
+# ------
+/TeamProjectGame/.classpath
 .classpath
+/TeamProjectGame/.project
+/TeamProjectGame/.settings
+/TeamProjectGame/bin
+
+# Dropbox
+# -------
+.dropbox
+
