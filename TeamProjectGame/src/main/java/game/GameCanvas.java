@@ -176,7 +176,7 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 		}
 		Graphics g = bs.getDrawGraphics();
 		// Paint Background.
-		g.setColor(Color.BLUE);
+		g.setColor(Color.gray);
 		g.fillRect(0, 0, getWidth(), getHeight());
 
 		terrain.paintTerrain(g);

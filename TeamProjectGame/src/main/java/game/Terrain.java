@@ -2,6 +2,10 @@ package game;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class Terrain implements Commons, Position {
 	
@@ -11,11 +15,16 @@ public class Terrain implements Commons, Position {
 	private int width = 800;
 	private int height = 200;
 	
+	BufferedImage spriteSheet;
+	BufferedImage[] sprites;
+	
 	private int speed = 3;
 	
 	public Terrain(int xPos, int yPos){
 		this.xPos = xPos;
 		this.yPos = yPos; 
+		
+		loadImage("terrainTest");
 	}
 
 	@Override
@@ -62,12 +71,60 @@ public class Terrain implements Commons, Position {
 		xPos -= speed;
 	}
 	
+	public void loadImage(String fileName){
+		
+		try {
+			spriteSheet = ImageIO.read(getClass().getResource(fileName +".png"));
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+
+
+		//final int rows = 1;
+		//final int cols = 1;
+		//sprites = new BufferedImage[rows * cols];
+
+		//for (int i = 0; i < rows; i++) {
+			//for (int j = 0; j < cols; j++) {
+				//sprites[(i * cols) + j] = spriteSheet.getSubimage(j * width, i * height, width, height);
+			//}
+		//}
+
+		
+	}
+	
 	public void paintTerrain(Graphics g){
 		
-		g.setColor(Color.BLACK);
-	    g.fillRect(xPos,yPos,width,height);
-	    g.setColor(Color.BLACK);
-	    g.drawRect(xPos,yPos,width,height);  
+		//g.setColor(Color.BLACK);
+	    //g.fillRect(xPos,yPos,width,height);
+	    //g.setColor(Color.BLACK);
+	    //g.drawRect(xPos,yPos,width,height);  
+	    g.drawImage(spriteSheet,xPos,yPos,width,height, null);
+	    //g.drawImage(img, x, y, observer)
 	    
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
