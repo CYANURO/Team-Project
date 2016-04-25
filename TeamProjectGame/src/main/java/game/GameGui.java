@@ -46,6 +46,7 @@ public class GameGui extends JFrame implements Commons{
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLocation(100,100);
+		setResizable(false);
 		//setBounds(100, 100, GAME_WIDTH, GAME_HEIGHT);
 		
 		contentPane = new JPanel();
@@ -58,6 +59,7 @@ public class GameGui extends JFrame implements Commons{
 		contentPane.add(gameCanvas, "name_7159208762052");
 		gameCanvas.start();
 		gameCanvas.setFocusable(true);
+		
 		
 		
 		welcomePanel = new WelcomePanel();

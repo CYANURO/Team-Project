@@ -4,10 +4,17 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 
+import javax.imageio.ImageIO;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
@@ -20,6 +27,7 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	private int speedCounter = 0;
 	private int counter;
 	private int delay = 1;
+	private int obstacleRandomXPosition;
 	protected Timer timer = new Timer(delay, this);
 
 	private Keyboard key;
@@ -34,12 +42,17 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	private int jumpCount;
 	private int attackCount;
 	private int livesCount;
+	
+	private Image spriteBackground;
+	
 
 	public GameCanvas() {
 		setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 
 		livesCount = 3;
 		createCanvas();
+		
+		
 		
 	}
 
@@ -50,15 +63,22 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 		timer.start();
 	}
 	
+	public void loadBackground(String fileName) {
+		
+		URL path = this.getClass().getResource(fileName + ".gif");	
+		spriteBackground = new ImageIcon(path).getImage();	
+	}
+	
 	public void createCanvas() {
 		
+		loadBackground("volcanic_background1");
+
 		character = new Character(20, 280);
 		terrain = new Terrain(0, 300);
 		obstacle = new Obstacle(320, 260);
 		
 		key = new Keyboard();
 		addKeyListener(key);
-
 
 	}
 	
@@ -73,9 +93,11 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 			terrain.setY(terrain.getY() + 2);
 			obstacle.setY(obstacle.getY() + 2);
 			
+			
 			characterJumping = true; 
+
 		}
-		if(key.jump == false && key.jump != previousJump || jumpLength >= 75){
+		if(key.jump == false && key.jump != previousJump || jumpLength >= 150){
 			jumpCount++;
 			jumpLength = 0;
 			
@@ -113,9 +135,9 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 					jumpCount = 0;
 					jumpLength = 0;
 				} else if(!isJumping){
-					character.setY(character.getY() + 2);
-					obstacle.setY(obstacle.getY() - 2);
-					terrain.setY(terrain.getY() - 2);
+					
+					movingObjects();
+
 				}
 				// Destroys Obstacle if attacking while passing through it.
 				if (characterXPos >= obstacle.getX()) {
@@ -132,12 +154,11 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 				} 
 			} else {
 				if (!isJumping) {
-					character.setY(character.getY() + 2);
-					obstacle.setY(obstacle.getY() - 2);
-					terrain.setY(terrain.getY() - 2);
+					
+					movingObjects();
 				}
 				// ends game if character fall to the bottom of the screen. 
-				if (characterYPos > terrain.getY() && characterXPos > terrain.getX()) {
+				if (characterYPos > (GAME_HEIGHT - 100)) {
 					
 					livesCount--;
 					checkLiveCount();
@@ -152,8 +173,18 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 
 			}
 			
+			/*if(character.getY() < terrain.getHeight() && character.getX() < terrain.getWidth()) {
+				
+				createRandomObstacle();
+				
+				//obstacle.update();
+				
+			}
+			*/
 			terrain.update();
 			obstacle.update();
+			
+			
 			
 			if(speedCounter == 300){
 				terrain.incrementSpeed();
@@ -161,6 +192,8 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 				speedCounter = 0;
 			}
 			speedCounter ++;
+			
+			
 		}
 
 	}
@@ -176,8 +209,9 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 		}
 		Graphics g = bs.getDrawGraphics();
 		// Paint Background.
-		g.setColor(Color.gray);
-		g.fillRect(0, 0, getWidth(), getHeight());
+		//g.setColor(Color.gray);
+		//g.fillRect(0, 0, getWidth(), getHeight());
+		g.drawImage(spriteBackground, 0, 0, getWidth(), getHeight(), null);
 
 		terrain.paintTerrain(g);
 		obstacle.paintObstacle(g);
@@ -185,6 +219,21 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 
 		g.dispose();
 		bs.show();
+	}
+	
+	public void movingObjects() {
+		
+		character.setY(character.getY() + 2);
+		obstacle.setY(terrain.getY() - 2);
+		terrain.setY(terrain.getY() - 2);
+		
+	}
+	
+	public void createRandomObstacle() {
+		
+		obstacleRandomXPosition = obstacle.getRandomObstacle(terrain.getWidth());
+		
+		obstacle = new Obstacle(obstacleRandomXPosition, terrain.getY());
 	}
 	
 	public void checkLiveCount() {

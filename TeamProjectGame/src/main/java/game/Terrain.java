@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 
@@ -12,13 +13,15 @@ public class Terrain implements Commons, Position {
 	private int xPos = 10;
 	private int yPos = 100;
 	
-	private int width = 800;
+	private int width = 700;
 	private int height = 200;
 	
-	BufferedImage spriteSheet;
-	BufferedImage[] sprites;
+	private BufferedImage spriteSheet;
+	private BufferedImage[] sprites;
 	
 	private int speed = 3;
+	
+	private Random randomYPosition;
 	
 	public Terrain(int xPos, int yPos){
 		this.xPos = xPos;
@@ -64,11 +67,17 @@ public class Terrain implements Commons, Position {
 	
 	
 	public void update(){
+		
+		randomYPosition = new Random();
+		
 		if(xPos + width <= 0){
-		   xPos = GAME_WIDTH;
+		   
+		   setX(GAME_WIDTH);
+		   setY(randomYPosition.nextInt(GAME_HEIGHT - 300));
 		}
-
+		
 		xPos -= speed;
+		
 	}
 	
 	public void loadImage(String fileName){

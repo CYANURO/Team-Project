@@ -2,6 +2,7 @@ package game;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.Random;
 
 public class Obstacle implements Position {
 	private int xPos = 10;
@@ -53,7 +54,7 @@ public class Obstacle implements Position {
 		speed++;
 	}
 	
-	public void update(){
+	public void update() {
 		xPos -= speed;
 	}
 	
@@ -63,6 +64,15 @@ public class Obstacle implements Position {
 
 	public boolean isDestroyed(){
 		return destroyed;
+	}
+	
+	public int getRandomObstacle(int xPosition) {
+		
+		Random randomXPosition = new Random();
+		int randomPos = randomXPosition.nextInt(xPosition);
+		
+		return randomPos;
+		
 	}
 	
 	public void paintObstacle(Graphics g){
