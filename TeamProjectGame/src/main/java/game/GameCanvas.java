@@ -97,7 +97,7 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 			characterJumping = true; 
 
 		}
-		if(key.jump == false && key.jump != previousJump || jumpLength >= 150){
+		if(key.jump == false && key.jump != previousJump || jumpLength >= 100){
 			jumpCount++;
 			jumpLength = 0;
 			
@@ -131,7 +131,7 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 
 			
 			if (character.getX() > terrain.getX()) {
-				if (characterYPos == terrain.getY()) {
+				if (characterYPos >= terrain.getY()) {
 					jumpCount = 0;
 					jumpLength = 0;
 				} else if(!isJumping){
@@ -158,7 +158,7 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 					movingObjects();
 				}
 				// ends game if character fall to the bottom of the screen. 
-				if (characterYPos > (GAME_HEIGHT - 100)) {
+				if (characterYPos > (GAME_HEIGHT - 180)) {
 					
 					livesCount--;
 					checkLiveCount();
@@ -173,14 +173,14 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 
 			}
 			
-			/*if(character.getY() < terrain.getHeight() && character.getX() < terrain.getWidth()) {
+			/*if(character.getX() >= terrain.getX() && character.getY() >= terrain.getY()) {
 				
 				createRandomObstacle();
 				
 				//obstacle.update();
 				
-			}
-			*/
+			}*/
+			
 			terrain.update();
 			obstacle.update();
 			
@@ -224,7 +224,7 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	public void movingObjects() {
 		
 		character.setY(character.getY() + 2);
-		obstacle.setY(terrain.getY() - 2);
+		obstacle.setY(obstacle.getY() - 2);
 		terrain.setY(terrain.getY() - 2);
 		
 	}

@@ -73,7 +73,12 @@ public class Terrain implements Commons, Position {
 		if(xPos + width <= 0){
 		   
 		   setX(GAME_WIDTH);
-		   setY(randomYPosition.nextInt(GAME_HEIGHT - 300));
+		   setY(randomYPosition.nextInt(GAME_HEIGHT - 100));
+		   
+		   if(yPos <= 150) {
+			   
+			   yPos += 50;
+		   }
 		}
 		
 		xPos -= speed;
