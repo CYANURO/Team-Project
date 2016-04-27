@@ -11,6 +11,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
@@ -47,7 +48,12 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	private int objectMovingSpeed;
 	private int score;
 	private int maxJumpLength;
+	
 	private int obstacleDestructionScore;
+	private int randomObstaclePosition;
+	
+	
+	private Random randomPositionGenerator;
 	
 	private Image spriteBackground;
 	
@@ -58,6 +64,8 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	public GameCanvas() {
 		setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
 		loadBackground("volcanic_background1");
+		
+		randomPositionGenerator = new Random();
 		
 		score = 0;
 		obstacleDestructionScore = 250;
@@ -84,9 +92,11 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	
 	public void createCanvas() {
 		
-		character = new Character(20, 280);
+		
+		character = new Character(20, 165);
 		terrain = new Terrain(0, 300);
-		obstacle = new Obstacle(320, 260);
+		randomObstaclePosition = randomPositionGenerator.nextInt(terrain.getWidth() - terrain.getObstacleBorder());
+		obstacle = new Obstacle(randomObstaclePosition, 260);
 		
 		key = new Keyboard();
 		addKeyListener(key);
@@ -139,13 +149,14 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 			int characterYPos = character.getY() + character.getHeight();
 			int characterXPos = character.getX() + character.getWidth();
 			int endOfTerrain = terrain.getX() + terrain.getWidth();
-			int bottomOfTerain = terrain.getY() + terrain.getHeight();
+			int bottomOfTerrain = terrain.getY() + terrain.getHeight();
 
 			boolean isJumping = characterJump();
 			character.attack(key.attack);
 
-			if (character.getX() > terrain.getX()) {
-				if (characterYPos >= terrain.getY()) {
+			if (characterXPos >= terrain.getX()) {
+				if (characterYPos > terrain.getY()) {
+					
 					jumpCount = 0;
 					jumpLength = 0;
 					score += objectMovingSpeed;
@@ -153,8 +164,6 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 				} else if(!isJumping) {
 					
 					movingObjects();
-					//score += character.getWidth();
-
 				}
 				// Destroys Obstacle if attacking while passing through it.
 				if (characterXPos >= obstacle.getX()) {
@@ -175,7 +184,6 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 							
 						} else if(!obstacle.isDestroyed() && character.getX()<= obstacle.getX()) {
 							
-							score += 0;
 							livesCount--;
 							checkLiveCount();
 						
@@ -192,42 +200,36 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 				// ends game if character fall to the bottom of the screen. 
 				if (characterYPos > (GAME_HEIGHT - GAME_OBSTACLE_BORDER)) {
 					
-					score = 0;
 					livesCount--;
 					checkLiveCount();
 				}
 				// ends game if character runs into the terrain. 
 				else if (characterXPos > terrain.getX() && characterYPos > terrain.getY() && 
-						character.getY() < bottomOfTerain) {
+						character.getY() < bottomOfTerrain) {
 					
-					score = 0;
 					livesCount--;
 					checkLiveCount();
+					
 				}
-
 			}
 			
 			/*if(character.getX() >= terrain.getX() && character.getY() >= terrain.getY()) {
 				
 				createRandomObstacle();
 				
-				//obstacle.update();
-				
 			}*/
 			
 			terrain.update();
 			obstacle.update();
-			
-			
 			
 			if(speedCounter == 300){
 				terrain.incrementSpeed();
 				obstacle.incrementSpeed();
 				speedCounter = 0;
 			}
+			
 			speedCounter ++;
 			System.out.println(score);
-			
 			
 		}
 
@@ -267,7 +269,6 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	public void createRandomObstacle() {
 		
 		obstacleRandomXPosition = obstacle.getRandomObstacle(terrain.getWidth());
-		
 		obstacle = new Obstacle(obstacleRandomXPosition, terrain.getY());
 	}
 	
@@ -275,27 +276,41 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 		
 		if(livesCount > 0) {
 			
-			//JOptionPane.showMessageDialog(getParent(), "You died! " + livesCount + " lives left!");
 			System.out.println("You died! " + livesCount + " lives left!");
+			score = 0;
 			revalidate();
-			
-			switch(livesCount) {
-			
-			case 1: 
-				
-			
-			}
 			createCanvas();
 		}
 		
 		else{
 			
 			gameOver = true;
-			JOptionPane.showMessageDialog(getParent(), "Game Over! " + livesCount + " lives left!");
+			int choice = JOptionPane.showConfirmDialog(getParent(), "Would You like to play again?", "Game Over! " 
+						+ livesCount + " lives left!", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
 			
+			if(choice == 0) {
+				
+				resetGameValues();
+				revalidate();
+				createCanvas();
+				
+			}
+			
+			else if(choice == 1) {
+				
+				System.exit(0);
+			}
 		}
 	}
 
+	public void resetGameValues() {
+		
+		gameOver = false;
+		score = 0;
+		livesCount = 3;
+		
+	}
+	
 	public int getScore() {
 		
 		return score;

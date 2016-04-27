@@ -2,6 +2,11 @@ package game;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.net.URL;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 public class Character implements Position {
 	Color characterColor;
@@ -14,13 +19,17 @@ public class Character implements Position {
 	
 	private boolean destroyed;
 	
+	private Image characterImage;
+	
 	private int[] jumpPos = {8, 7, 6, 5, 4, 3, 2, 1, 0}; 
 	int jumpPosIndex = 0;
 	
 	public Character(int xPos, int yPos){
-		characterColor = Color.CYAN;
+
 		this.xPos = xPos;
 		this.yPos = yPos; 
+		
+		loadCharacterImage("tasRun");
 	}
 
 	@Override
@@ -62,11 +71,18 @@ public class Character implements Position {
 	public void jump(){
 		yPos-=2;
 	}
+	
+	public void loadCharacterImage(String fileName) {
+		
+		URL path = this.getClass().getResource(fileName + ".gif");
+		characterImage = new ImageIcon(path).getImage();
+	}
+	
 	public void attack(boolean attack){
 		if(attack){
-			characterColor = Color.RED;
+			loadCharacterImage("tasEat");
 		}else{
-			characterColor = Color.CYAN;
+			loadCharacterImage("tasRun");
 		}
 		//characterColor = Color.RED;
 		//xPos++; 
@@ -74,9 +90,10 @@ public class Character implements Position {
 	public void update(boolean jump, boolean attack){
 		
 		if(attack){
-			characterColor = Color.RED;
+			loadCharacterImage("tasEat");
+			
 		}else{
-			characterColor = Color.CYAN;
+			loadCharacterImage("tasRun");
 		}
 		//if(jump){
 			//int jumpPosIndex;
@@ -89,10 +106,8 @@ public class Character implements Position {
 		
 		if(!destroyed) {
 			
-			g.setColor(characterColor);
-	        g.fillOval(xPos,yPos,width,height);
-	        g.setColor(Color.BLACK);
-	        g.drawOval(xPos,yPos,width,height);
+			g.drawImage(characterImage, xPos, yPos, null);
+	       
 			
 		}
     }

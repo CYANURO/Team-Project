@@ -12,12 +12,16 @@ public class Obstacle implements Position {
 	private int height = 40;
 	
 	private int speed = 3;
+	private int minimumXPosition = 250;
 	
 	private boolean destroyed;
 	
 	public Obstacle(int xPos, int yPos){
+				
 		this.xPos = xPos;
 		this.yPos = yPos; 
+		
+		validateXPosition();
 	}
 
 	@Override
@@ -50,6 +54,16 @@ public class Obstacle implements Position {
 	public int getHeight() {
 		return height;
 	}
+	
+	public void validateXPosition() {
+
+		if(xPos < minimumXPosition) {
+			
+			xPos = minimumXPosition;
+			xPos += new Random().nextInt(minimumXPosition);
+		}
+	}
+	
 	public void incrementSpeed(){
 		speed++;
 	}

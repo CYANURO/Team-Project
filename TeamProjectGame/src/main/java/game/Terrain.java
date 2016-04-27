@@ -23,19 +23,23 @@ public class Terrain implements Commons, Position {
 	private BufferedImage[] sprites;
 	private List<String> spriteNames;
 	
-	private int terrainSelect;
+	private int terrainNumberSelect;
 	private int speed = 3;
+	private int obstacleBorder = 100;
+	private int minimumYPosition = 200;
 	
 	private Random randomYPosition;
 	
 	public Terrain(int xPos, int yPos){
+		
 		this.xPos = xPos;
 		this.yPos = yPos; 
 		
-		spriteNames = new ArrayList<String>(Arrays.asList("xsmallTerrain", "smallTerrain", "terrainTest", "bigHalf",
-					"biggerHalf", "biggestTerrain"));
+		spriteNames = new ArrayList<String>(Arrays.asList("xsmallTerrain", "smallTerrain", "regularTerrain", "mediumTerrain", 
+				"largeTerrain", "xLargeTerrain"));
 		
-		loadImage("biggerHalf");
+		loadImage(spriteNames.get(5).toString());
+		
 	}
 
 	@Override
@@ -73,22 +77,26 @@ public class Terrain implements Commons, Position {
 		speed++;
 	}
 	
+	public int getObstacleBorder() {
+		
+		return obstacleBorder;
+	}
 	
 	public void update(){
 		
 		randomYPosition = new Random();
-		terrainSelect = randomYPosition.nextInt(spriteNames.size());
+		terrainNumberSelect = randomYPosition.nextInt(spriteNames.size());
 		
 		if(xPos + width <= 0){
 			
 			updateTerrainWidth();
-			loadImage(spriteNames.get(terrainSelect).toString());
+			loadImage(spriteNames.get(terrainNumberSelect).toString());
 			setX(GAME_WIDTH);
 			setY(randomYPosition.nextInt(GAME_HEIGHT - GAME_OBSTACLE_BORDER));
 		   
-			if(yPos <= 150) {
+			if(yPos < GAME_OBSTACLE_BORDER) {
 			   
-				yPos = 200;
+				yPos = minimumYPosition;
 				yPos += randomYPosition.nextInt(yPos);
 			}
 		}
@@ -99,14 +107,28 @@ public class Terrain implements Commons, Position {
 	
 	public void updateTerrainWidth() {
 		
-		if(terrainSelect <= 1) {
+		switch(terrainNumberSelect) {
+		
+		case 0:
 			
 			width = 400;
-		}
+			break;
 		
-		else if(terrainSelect > 1) {
+		case 1:
 			
-			width = 900;
+			width = 500;
+			break;
+			
+		case 2: case 3:
+			
+			width = 600;
+			break;
+			
+		case 4: case 5:
+			
+			width = 800;
+			break;
+		
 		}
 	}
 	
