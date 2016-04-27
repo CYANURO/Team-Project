@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
@@ -13,12 +16,14 @@ public class Terrain implements Commons, Position {
 	private int xPos = 10;
 	private int yPos = 100;
 	
-	private int width = 700;
+	private int width = 1100;
 	private int height = 200;
 	
 	private BufferedImage spriteSheet;
 	private BufferedImage[] sprites;
+	private List<String> spriteNames;
 	
+	private int terrainSelect;
 	private int speed = 3;
 	
 	private Random randomYPosition;
@@ -27,7 +32,10 @@ public class Terrain implements Commons, Position {
 		this.xPos = xPos;
 		this.yPos = yPos; 
 		
-		loadImage("terrainTest");
+		spriteNames = new ArrayList<String>(Arrays.asList("xsmallTerrain", "smallTerrain", "terrainTest", "bigHalf",
+					"biggerHalf", "biggestTerrain"));
+		
+		loadImage("biggerHalf");
 	}
 
 	@Override
@@ -69,20 +77,37 @@ public class Terrain implements Commons, Position {
 	public void update(){
 		
 		randomYPosition = new Random();
+		terrainSelect = randomYPosition.nextInt(spriteNames.size());
 		
 		if(xPos + width <= 0){
+			
+			updateTerrainWidth();
+			loadImage(spriteNames.get(terrainSelect).toString());
+			setX(GAME_WIDTH);
+			setY(randomYPosition.nextInt(GAME_HEIGHT - GAME_OBSTACLE_BORDER));
 		   
-		   setX(GAME_WIDTH);
-		   setY(randomYPosition.nextInt(GAME_HEIGHT - 100));
-		   
-		   if(yPos <= 150) {
+			if(yPos <= 150) {
 			   
-			   yPos += 50;
-		   }
+				yPos = 200;
+				yPos += randomYPosition.nextInt(yPos);
+			}
 		}
 		
 		xPos -= speed;
 		
+	}
+	
+	public void updateTerrainWidth() {
+		
+		if(terrainSelect <= 1) {
+			
+			width = 400;
+		}
+		
+		else if(terrainSelect > 1) {
+			
+			width = 900;
+		}
 	}
 	
 	public void loadImage(String fileName){

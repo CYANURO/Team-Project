@@ -38,21 +38,34 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	private Obstacle obstacle;
 	
 	private boolean previousJump;
+	
 	private int jumpLength;
 	private int jumpCount;
 	private int attackCount;
 	private int livesCount;
 	
+	private int objectMovingSpeed;
+	private int score;
+	private int maxJumpLength;
+	private int obstacleDestructionScore;
+	
 	private Image spriteBackground;
 	
 
+	/**
+	 * @wbp.parser.entryPoint
+	 */
 	public GameCanvas() {
 		setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
-
+		loadBackground("volcanic_background1");
+		
+		score = 0;
+		obstacleDestructionScore = 250;
+		objectMovingSpeed = 2;
 		livesCount = 3;
+		maxJumpLength = 100;
+		
 		createCanvas();
-		
-		
 		
 	}
 
@@ -71,8 +84,6 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 	
 	public void createCanvas() {
 		
-		loadBackground("volcanic_background1");
-
 		character = new Character(20, 280);
 		terrain = new Terrain(0, 300);
 		obstacle = new Obstacle(320, 260);
@@ -86,18 +97,22 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 		
 		boolean characterJumping = false;
 		
-		
 		if(key.jump && jumpCount < 2){
+			
 			jumpLength++;
 			character.jump();
-			terrain.setY(terrain.getY() + 2);
-			obstacle.setY(obstacle.getY() + 2);
 			
+			terrain.setY(terrain.getY() + objectMovingSpeed);
+			obstacle.setY(obstacle.getY() + objectMovingSpeed);
+			
+			score += objectMovingSpeed;
 			
 			characterJumping = true; 
 
 		}
-		if(key.jump == false && key.jump != previousJump || jumpLength >= 100){
+		
+		if(key.jump == false && key.jump != previousJump || jumpLength >= maxJumpLength){
+			
 			jumpCount++;
 			jumpLength = 0;
 			
@@ -107,6 +122,7 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 		return characterJumping;
 		
 	}
+	
 	private void characterAttack() {
 		
 	}
@@ -125,41 +141,58 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 			int endOfTerrain = terrain.getX() + terrain.getWidth();
 			int bottomOfTerain = terrain.getY() + terrain.getHeight();
 
-
 			boolean isJumping = characterJump();
 			character.attack(key.attack);
 
-			
 			if (character.getX() > terrain.getX()) {
 				if (characterYPos >= terrain.getY()) {
 					jumpCount = 0;
 					jumpLength = 0;
-				} else if(!isJumping){
+					score += objectMovingSpeed;
+					
+				} else if(!isJumping) {
 					
 					movingObjects();
+					//score += character.getWidth();
 
 				}
 				// Destroys Obstacle if attacking while passing through it.
 				if (characterXPos >= obstacle.getX()) {
 					if (characterYPos > obstacle.getY()){
 						if(key.attack){
+							
 							// Add points here;
+							
+							if(!obstacle.isDestroyed()) {
+								
+								score += obstacleDestructionScore;
+							}
+							else {
+								
+								score += 0;
+							}
 							obstacle.destroy();
+							
 						} else if(!obstacle.isDestroyed() && character.getX()<= obstacle.getX()) {
 							
+							score += 0;
 							livesCount--;
 							checkLiveCount();
+						
 						}
 					}	
 				} 
-			} else {
+			} 
+			else {
+				
 				if (!isJumping) {
 					
 					movingObjects();
 				}
 				// ends game if character fall to the bottom of the screen. 
-				if (characterYPos > (GAME_HEIGHT - 180)) {
+				if (characterYPos > (GAME_HEIGHT - GAME_OBSTACLE_BORDER)) {
 					
+					score = 0;
 					livesCount--;
 					checkLiveCount();
 				}
@@ -167,6 +200,7 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 				else if (characterXPos > terrain.getX() && characterYPos > terrain.getY() && 
 						character.getY() < bottomOfTerain) {
 					
+					score = 0;
 					livesCount--;
 					checkLiveCount();
 				}
@@ -192,6 +226,7 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 				speedCounter = 0;
 			}
 			speedCounter ++;
+			System.out.println(score);
 			
 			
 		}
@@ -243,6 +278,13 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 			//JOptionPane.showMessageDialog(getParent(), "You died! " + livesCount + " lives left!");
 			System.out.println("You died! " + livesCount + " lives left!");
 			revalidate();
+			
+			switch(livesCount) {
+			
+			case 1: 
+				
+			
+			}
 			createCanvas();
 		}
 		
@@ -254,6 +296,16 @@ public class GameCanvas extends Canvas implements Commons, ActionListener {
 		}
 	}
 
+	public int getScore() {
+		
+		return score;
+	}
+	
+	public int getLiveCount() {
+		
+		return livesCount;
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		counter += 2;

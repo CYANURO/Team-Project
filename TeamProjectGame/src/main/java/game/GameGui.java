@@ -60,8 +60,6 @@ public class GameGui extends JFrame implements Commons{
 		gameCanvas.start();
 		gameCanvas.setFocusable(true);
 		
-		
-		
 		welcomePanel = new WelcomePanel();
 		contentPane.add(welcomePanel, "name_6799939532017");
 		
